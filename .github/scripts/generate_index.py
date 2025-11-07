@@ -2,12 +2,45 @@
 import os
 import re
 
+def get_persian_ordinal(num):
+    """Convert number to Persian ordinal"""
+    persian_ordinals = {
+        1: 'اول',
+        2: 'دوم',
+        3: 'سوم',
+        4: 'چهارم',
+        5: 'پنجم',
+        6: 'ششم',
+        7: 'هفتم',
+        8: 'هشتم',
+        9: 'نهم',
+        10: 'دهم',
+        11: 'یازدهم',
+        12: 'دوازدهم',
+        13: 'سیزدهم',
+        14: 'چهاردهم',
+        15: 'پانزدهم',
+        16: 'شانزدهم',
+        17: 'هفدهم',
+        18: 'هجدهم',
+        19: 'نوزدهم',
+        20: 'بیستم'
+    }
+    return persian_ordinals.get(num, f'{num}')
+
 def get_directories():
     """Scan for directories that contain index.html files"""
     directories = []
 
     # Get all items in the current directory
-    for item in sorted(os.listdir('.')):
+    # Sort numerically for digit-only names, alphabetically for others
+    def sort_key(item):
+        if item.isdigit():
+            return (0, int(item))  # Numbers first, sorted numerically
+        else:
+            return (1, item)  # Then strings, sorted alphabetically
+
+    for item in sorted(os.listdir('.'), key=sort_key):
         # Skip hidden files/folders and .github
         if item.startswith('.'):
             continue
@@ -17,11 +50,14 @@ def get_directories():
             # Check if it has an index.html file
             index_path = os.path.join(item, 'index.html')
             if os.path.exists(index_path):
-                # Create a readable name from the directory name
-                name = item.replace('_', ' ').replace('-', ' ').title()
-                # If it's just a number or simple name, add "Directory" prefix
+                # If it's a number, create Persian lesson name
                 if item.isdigit():
-                    name = f'Directory {item}'
+                    lesson_num = int(item)
+                    name = f'درس {get_persian_ordinal(lesson_num)}'
+                else:
+                    # For non-numeric directories, use the name as-is
+                    name = item.replace('_', ' ').replace('-', ' ')
+
                 directories.append({
                     'name': name,
                     'path': item
@@ -40,11 +76,11 @@ def generate_html(directories):
     directories_js = ',\n'.join(dir_items)
 
     html = f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Directory Browser</title>
+    <title>فهرست دروس</title>
     <style>
         * {{
             margin: 0;
@@ -53,7 +89,7 @@ def generate_html(directories):
         }}
 
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: Tahoma, 'Iranian Sans', 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 2rem;
@@ -99,7 +135,7 @@ def generate_html(directories):
             text-decoration: none;
             color: #495057;
             transition: all 0.3s ease;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 500;
         }}
 
@@ -107,17 +143,17 @@ def generate_html(directories):
             background: #667eea;
             color: white;
             border-color: #667eea;
-            transform: translateX(10px);
+            transform: translateX(-10px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }}
 
-        .directory-item::before {{
+        .directory-item::after {{
             content: "📁";
-            margin-right: 1rem;
+            margin-left: 1rem;
             font-size: 1.3rem;
         }}
 
-        .directory-item:hover::before {{
+        .directory-item:hover::after {{
             content: "📂";
         }}
 
@@ -141,7 +177,7 @@ def generate_html(directories):
             padding: 0.25rem 0.75rem;
             border-radius: 12px;
             font-size: 0.85rem;
-            margin-left: 0.5rem;
+            margin-right: 0.5rem;
         }}
 
         @media (max-width: 600px) {{
@@ -167,8 +203,8 @@ def generate_html(directories):
 <body>
     <div class="container">
         <header>
-            <h1>📚 Directory Browser</h1>
-            <p>Select a directory to view its contents</p>
+            <h1>📚 فهرست دروس</h1>
+            <p>یک درس را برای مشاهده انتخاب کنید</p>
         </header>
 
         <div class="directory-list" id="directoryList">
@@ -176,7 +212,7 @@ def generate_html(directories):
         </div>
 
         <footer>
-            <p>GitHub Pages Directory Browser <span class="badge">Auto-generated</span></p>
+            <p><span class="badge">تولید خودکار</span> فهرست دروس در گیت‌هاب</p>
         </footer>
     </div>
 
@@ -191,7 +227,7 @@ def generate_html(directories):
         if (directories.length === 0) {{
             directoryList.innerHTML = `
                 <div class="empty-state">
-                    <p>No directories with index.html found</p>
+                    <p>هیچ درسی یافت نشد</p>
                 </div>
             `;
         }} else {{

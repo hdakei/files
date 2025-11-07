@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Directory Browser</title>
+    <title>فهرست دروس</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: Tahoma, 'Iranian Sans', 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 2rem;
@@ -58,7 +58,7 @@
             text-decoration: none;
             color: #495057;
             transition: all 0.3s ease;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 500;
         }
 
@@ -66,17 +66,17 @@
             background: #667eea;
             color: white;
             border-color: #667eea;
-            transform: translateX(10px);
+            transform: translateX(-10px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
-        .directory-item::before {
+        .directory-item::after {
             content: "📁";
-            margin-right: 1rem;
+            margin-left: 1rem;
             font-size: 1.3rem;
         }
 
-        .directory-item:hover::before {
+        .directory-item:hover::after {
             content: "📂";
         }
 
@@ -100,7 +100,7 @@
             padding: 0.25rem 0.75rem;
             border-radius: 12px;
             font-size: 0.85rem;
-            margin-left: 0.5rem;
+            margin-right: 0.5rem;
         }
 
         @media (max-width: 600px) {
@@ -126,8 +126,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>📚 Directory Browser</h1>
-            <p>Select a directory to view its contents</p>
+            <h1>📚 فهرست دروس</h1>
+            <p>یک درس را برای مشاهده انتخاب کنید</p>
         </header>
 
         <div class="directory-list" id="directoryList">
@@ -135,15 +135,15 @@
         </div>
 
         <footer>
-            <p>GitHub Pages Directory Browser <span class="badge">Auto-generated</span></p>
+            <p><span class="badge">تولید خودکار</span> فهرست دروس در گیت‌هاب</p>
         </footer>
     </div>
 
     <script>
         // Automatically generated directory list
         const directories = [
-            { name: 'Directory 1', path: '1' },
-            { name: 'Directory 2', path: '2' }
+            { name: 'درس اول', path: '1' },
+            { name: 'درس دوم', path: '2' }
         ];
 
         const directoryList = document.getElementById('directoryList');
@@ -151,7 +151,7 @@
         if (directories.length === 0) {
             directoryList.innerHTML = `
                 <div class="empty-state">
-                    <p>No directories with index.html found</p>
+                    <p>هیچ درسی یافت نشد</p>
                 </div>
             `;
         } else {
