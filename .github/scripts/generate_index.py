@@ -212,7 +212,7 @@ def generate_html(directories):
         </div>
 
         <footer>
-            <p><span class="badge">تولید خودکار</span> فهرست دروس در گیت‌هاب</p>
+            <p>تولید شده توسط <span class="badge">زینب محمودی فر</span></p>
         </footer>
     </div>
 
